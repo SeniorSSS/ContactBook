@@ -10,5 +10,6 @@ namespace ContactBook.Core.Services
     public interface IContactService
     {
         Task<IEnumerable<Contacts>> GetContacts();
+        Task<ServicesResult> AddContact(Contacts contact);
     }
 }

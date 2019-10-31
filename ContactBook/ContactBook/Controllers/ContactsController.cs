@@ -1,4 +1,5 @@
-﻿using ContactBook.Core.Services;
+﻿using ContactBook.Core.Models;
+using ContactBook.Core.Services;
 using ContactBook.Data;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,10 @@ namespace ContactBook.Controllers
                         return Ok(flights.Select(f => _mapper.Map<FlightRequest>(f)).ToList());*/
             var contacts = await _contacService.GetContacts();
 
+            foreach (var c in contacts)
+            {
+                System.Diagnostics.Debug.WriteLine(c.Name);
+            }
             return Ok(contacts);
         }
 
@@ -47,9 +52,14 @@ namespace ContactBook.Controllers
         {
         }
 
+
         // PUT: api/Contacts/5
-        public void Put(int id, [FromBody]string value)
+        [HttpPut]
+        [Route("api/contacts")]
+        public async Task<IHttpActionResult> AddContact(Contacts contact)
         {
+            var result = await _contacService.AddContact(contact);
+            return Created(string.Empty, contact);
         }
 
         // DELETE: api/Contacts/5

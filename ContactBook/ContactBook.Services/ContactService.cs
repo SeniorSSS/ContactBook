@@ -16,5 +16,11 @@ namespace ContactBook.Services
         {
             return await Task.FromResult(Get());
         }
+
+        public async Task<ServicesResult> AddContact(Contacts contact)
+        {
+            return Create(contact);
+        }
+
     }
 }
