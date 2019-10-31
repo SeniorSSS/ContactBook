@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ContactBook.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace ContactBook.Core.Services
 {
     public interface IContactService
     {
-
+        Task<IEnumerable<Contacts>> Getcontacts();
     }
 }

@@ -11,7 +11,7 @@ namespace ContactBook.Services
     public class ContactService : EntityService<Contacts>
     {
         public ContactService(IContactBookDbContext context) : base(context) { }
-        public async Task<IEnumerable<Contacts>> GetFlights()
+        public async Task<IEnumerable<Contacts>> GetContacts()
         {
             return await Task.FromResult(Get());
         }
