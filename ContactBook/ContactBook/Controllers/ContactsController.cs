@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ContactBook.Core.Services;
+using ContactBook.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,7 +12,14 @@ namespace ContactBook.Controllers
 {
     public class ContactsController : ApiController
     {
+        protected readonly IContactService _contacService;
         // GET: api/Contacts
+
+        public ContactsController(IContactService contactService)
+        {
+            _contacService = contactService;
+        }
+
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
@@ -27,8 +36,9 @@ namespace ContactBook.Controllers
         {
             /*            var flights = await _flightService.GetFlights();
                         return Ok(flights.Select(f => _mapper.Map<FlightRequest>(f)).ToList());*/
+            var contacts = await _contacService.GetContacts();
 
-            return Ok();
+            return Ok(contacts);
         }
 
 
