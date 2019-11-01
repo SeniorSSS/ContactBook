@@ -1,4 +1,5 @@
 ﻿using ContactBook.Core.Models;
+using ContactBook.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,8 @@ namespace ContactBook.Core.Services
         Task<ServicesResult> AddEmail(Emails email);
 
         Task<IEnumerable<Emails>> GetEmailsById(int id);
+
+        Task<IEnumerable<EmailRequest>> GetEmailsOnlyByContactId(int id);
     }
+
 }

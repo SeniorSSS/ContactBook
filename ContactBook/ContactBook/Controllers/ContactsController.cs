@@ -67,15 +67,27 @@ namespace ContactBook.Controllers
             return Ok(emails);
         }
 
+        [HttpGet]
+        [Route("api/get/emailsNoContact/{id:int}")]
+        //atdod email id un email bez informacijas par kontaktu no parenta
+        public async Task<IHttpActionResult> GetEmailsNoContactById(int id)
+        {
+            var emails = await _emailService.GetEmailsOnlyByContactId(id);
+            return Ok(emails);
+        }
+
+        [HttpGet]
+        [Route("api/get/emails/all")]
+        public async Task<IHttpActionResult> GetAllEmails()
+        {
+            var emails = await _emailService.GetEmails();
+            return Ok(emails);
+        }
+
         [HttpPut]
         [Route("api/emails")]
         public async Task<IHttpActionResult> AddEmails(EmailRequest emailWithIdAsContactId)
         {
-          /*  Emails email = new Emails();
-
-             email.Email = "seniors@inbox.lv";
-             email.Contact.Id = 1;
-*/
             var email = new Emails();
             //email.Contact.Id = emailWithIdAsContactId.Id;
             email.Contact = await _contacService.GetContactById(emailWithIdAsContactId.Id);

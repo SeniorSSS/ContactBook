@@ -56,6 +56,7 @@
     <Compile Include="Models\Companies.cs" />
     <Compile Include="Models\ContactBookResult.cs" />
     <Compile Include="Models\Contacts.cs" />
+    <Compile Include="Models\EmailRequest.cs" />
     <Compile Include="Models\Emails.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\PhoneNumbers.cs" />

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using System.Data.Entity;
 using System.Linq;
-
+using ContactBook.Services.Models;
 
 namespace ContactBook.Services
 {
@@ -30,6 +30,19 @@ namespace ContactBook.Services
         {
             var emails = Query().Where(e => e.Contact.Id == id);
             return await emails.ToListAsync();
+        }
+
+        public async Task<IEnumerable<EmailRequest>> GetEmailsOnlyByContactId(int id)
+        {
+            var emailsReq = Query().Where(e => e.Contact.Id == id)
+                .Select(e => new EmailRequest {
+                                    //ja nu savaigās tomēr contactId frontendā, kaut gan tur jau jābūt tikai vienam ContactId visam
+                                    //ContactId = e.Contact.Id,
+                                    Id = e.Id,
+                                    Email = e.Email
+                                });
+
+            return await emailsReq.ToListAsync();
         }
 
     }
