@@ -53,7 +53,9 @@
   <ItemGroup>
     <Compile Include="ContactService.cs" />
     <Compile Include="DbService.cs" />
+    <Compile Include="EmailService.cs" />
     <Compile Include="EntityService.cs" />
+    <Compile Include="Models\EmailRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -70,5 +72,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -22,5 +22,16 @@ namespace ContactBook.Services
             return Create(contact);
         }
 
+        public async Task<Contacts> GetContactById(int id)
+        {
+            return await GetById(id);
+        }
+
+        /*        public async Task<IEnumerable<ContactBookResult>> GetContactById(int id)
+                {
+
+                    return await Task.FromResult(Get());
+                }*/
+
     }
 }

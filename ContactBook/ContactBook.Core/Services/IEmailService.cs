@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace ContactBook.Core.Services
 {
-    public interface IContactService
+    public interface IEmailService
     {
-        Task<IEnumerable<Contacts>> GetContacts();
-        Task<ServicesResult> AddContact(Contacts contact);
-        Task<Contacts> GetContactById(int id);
+        Task<IEnumerable<Emails>> GetEmails();
+
+        Task<ServicesResult> AddEmail(Emails email);
+
+        Task<IEnumerable<Emails>> GetEmailsById(int id);
     }
 }
