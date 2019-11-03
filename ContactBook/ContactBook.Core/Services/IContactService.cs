@@ -12,5 +12,7 @@ namespace ContactBook.Core.Services
         Task<IEnumerable<Contacts>> GetContacts();
         Task<ServicesResult> AddContact(Contacts contact);
         Task<Contacts> GetContactById(int id);
+        Task<ServicesResult> DeleteContactById(int id);
+        Task<ServicesResult> UpdateContact(Contacts contact);
     }
 }

@@ -17,6 +17,10 @@ namespace ContactBook.Core.Services
         Task<IEnumerable<Emails>> GetEmailsById(int id);
 
         Task<IEnumerable<EmailRequest>> GetEmailsOnlyByContactId(int id);
+
+        Task<ServicesResult> DeleteEmailById(int id);
+        Task DeleteEmailsByContactId(int id);
+        Task<ServicesResult> UpdateEmail(EmailRequest emailReq);
     }
 
 }

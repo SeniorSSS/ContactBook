@@ -16,37 +16,22 @@ namespace ContactBook.Controllers
     {
         protected readonly IContactService _contacService;
         protected readonly IEmailService _emailService;
-        // GET: api/Contacts
+        protected readonly IPhoneTypeService _phoneTypeService;
 
-        public ContactsController(IContactService contactService, IEmailService emailService)
+        public ContactsController(IContactService contactService, IEmailService emailService, IPhoneTypeService phoneTypeService)
         {
             _contacService = contactService;
             _emailService = emailService;
+            _phoneTypeService = phoneTypeService;
         }
 
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/Contacts/5
-        public string Get(int id)
-        {
-            return "value";
-        }
 
         [HttpGet]
         [Route("api/get/contacts")]
         public async Task<IHttpActionResult> GetContacts()
         {
-            /*            var flights = await _flightService.GetFlights();
-                        return Ok(flights.Select(f => _mapper.Map<FlightRequest>(f)).ToList());*/
             var contacts = await _contacService.GetContacts();
 
-            foreach (var c in contacts)
-            {
-                System.Diagnostics.Debug.WriteLine(c.Name);
-            }
             return Ok(contacts);
         }
 
@@ -54,10 +39,49 @@ namespace ContactBook.Controllers
         [Route("api/contacts")]
         public async Task<IHttpActionResult> AddContact(Contacts contact)
         {
+            if (!Utils.ValidateContact(contact))
+            {
+                return BadRequest();
+            }
             var result = await _contacService.AddContact(contact);
+            if (!result.Succeeded)
+            {
+                return Conflict();
+            }
+            contact.Id = result.Entity.Id;
             return Created(string.Empty, contact);
         }
 
+        [HttpDelete]
+        [Route("api/contacts/{id:int}")]
+        public async Task<IHttpActionResult> DeleteContact(int id)
+        {
+
+            await _emailService.DeleteEmailsByContactId(id);
+            await _contacService.DeleteContactById(id);
+
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("api/contacts/update")]
+        public async Task<IHttpActionResult> UpdateContact(Contacts contact)
+        {
+            if (!Utils.ValidateContact(contact))
+            {
+                return BadRequest();
+            }
+
+            var result = await _contacService.UpdateContact(contact);
+            if (!result.Succeeded)
+            {
+                return Conflict();
+            }
+            return Ok();
+        }
+
+// ================================== EMails ===========================================
+//======================================================================================
 
         [HttpGet]
         [Route("api/get/emails/{id:int}")]
@@ -68,7 +92,7 @@ namespace ContactBook.Controllers
         }
 
         [HttpGet]
-        [Route("api/get/emailsNoContact/{id:int}")]
+        [Route("api/get/emailsNC/{id:int}")]
         //atdod email id un email bez informacijas par kontaktu no parenta
         public async Task<IHttpActionResult> GetEmailsNoContactById(int id)
         {
@@ -89,30 +113,79 @@ namespace ContactBook.Controllers
         public async Task<IHttpActionResult> AddEmails(EmailRequest emailWithIdAsContactId)
         {
             var email = new Emails();
-            //email.Contact.Id = emailWithIdAsContactId.Id;
             email.Contact = await _contacService.GetContactById(emailWithIdAsContactId.Id);
             email.Email = emailWithIdAsContactId.Email;
 
-            var result = await _emailService.AddEmail(email);
+            if (!Utils.ValidateEmail(email.Email))
+            {
+                return BadRequest();
+            }
 
+            var result = await _emailService.AddEmail(email);
+            if (!result.Succeeded)
+            {
+                return Conflict();
+            }
+            email.Id = result.Entity.Id;
             return Created(string.Empty, email);
         }
 
 
-
-        // POST: api/Contacts
-        public void Post([FromBody]string value)
+        [HttpDelete]
+        [Route("api/emails/{id:int}")]
+        public async Task<IHttpActionResult> DeleteEmail(int id)
         {
+           await _emailService.DeleteEmailById(id);
+            return Ok();
         }
 
-
-        // PUT: api/Contacts/5
-
-
-
-        // DELETE: api/Contacts/5
-        public void Delete(int id)
+        [HttpPut]
+        [Route("api/emails/update")]
+        public async Task<IHttpActionResult> UpdateEmail(EmailRequest email)
         {
+            if (!Utils.ValidateEmail(email.Email))
+            {
+                return BadRequest();
+            }
+
+            var result = await _emailService.UpdateEmail(email);
+            if (!result.Succeeded)
+            {
+                return Conflict();
+            }
+            return Ok();
         }
+
+        // ================================== Phones ===========================================
+        //======================================================================================
+
+        //---- PhoneTypes
+
+        [HttpPut]
+        [Route("api/phoneTypes")]
+        public async Task<IHttpActionResult> AddPhoneTupe(PhoneTypes phoneType)
+        {
+            if (!Utils.ValidatePhoneType(phoneType.PhoneType))
+            {
+                return BadRequest();
+            }
+            var result = await _phoneTypeService.AddPhoneType(phoneType);
+            if (!result.Succeeded)
+            {
+                return Conflict();
+            }
+            phoneType.Id = result.Entity.Id;
+            return Created(string.Empty, phoneType);
+        }
+
+        [HttpGet]
+        [Route("api/get/phoneTypes")]
+        public async Task<IHttpActionResult> GetPhoneTypes()
+        {
+            var phoneTypes = await _phoneTypeService.GetPhoneTypes();
+
+            return Ok(phoneTypes);
+        }
+
     }
 }

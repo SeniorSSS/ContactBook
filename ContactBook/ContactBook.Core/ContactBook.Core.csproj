@@ -66,7 +66,9 @@
     <Compile Include="Services\IDbService.cs" />
     <Compile Include="Services\IEmailService.cs" />
     <Compile Include="Services\IEntityService.cs" />
+    <Compile Include="Services\IPhoneTypeService.cs" />
     <Compile Include="Services\ServicesResult.cs" />
+    <Compile Include="Services\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

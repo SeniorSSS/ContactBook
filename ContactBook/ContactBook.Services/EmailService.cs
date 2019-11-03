@@ -45,5 +45,25 @@ namespace ContactBook.Services
             return await emailsReq.ToListAsync();
         }
 
+        public async Task<ServicesResult> DeleteEmailById(int id)
+        {
+            var email = await GetById(id);
+            return email == null ? new ServicesResult(true) : Delete(email);
+        }
+
+        public async Task DeleteEmailsByContactId(int id)
+        {
+           var emailsToDelete = await GetEmailsById(id);
+            _ctx.Emails.RemoveRange(emailsToDelete);
+        }
+
+        public async Task<ServicesResult> UpdateEmail(EmailRequest emailReq)
+        {
+            var email = await GetById(emailReq.Id);
+            email.Email = emailReq.Email;
+
+            return email == null ? new ServicesResult(true) : Update(email);       
+        }
+
     }
 }

@@ -15,6 +15,12 @@ namespace ContactBook.Data
         DbEntityEntry<T> Entry<T>(T entity) where T : class;
         DbSet<PhoneNumbers> PhoneNumbers { get; set; }
         DbSet<PhoneTypes> PhoneTypes { get; set; }
+
+        DbSet<Companies> Companies { get; set; }
+        DbSet<Addresses> Addresses { get; set; }
+        DbSet<Emails> Emails { get; set; }
+        DbSet<Contacts> Contacts { get; set; }
+
         int SaveChanges();
         Task<int> SaveChangesAsync();
     }

@@ -8,7 +8,7 @@ namespace ContactBook.Services.Models
 {
     public class EmailRequest
     {
-        //public int ContactId { get; set; }
+        //public int ContactId { get; set; } tas ja vajag ContactId atdod FrontEndam
 
         public int Id { get; set; }
         public string Email { get; set; }
