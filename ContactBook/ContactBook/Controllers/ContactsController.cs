@@ -17,12 +17,14 @@ namespace ContactBook.Controllers
         protected readonly IContactService _contacService;
         protected readonly IEmailService _emailService;
         protected readonly IPhoneTypeService _phoneTypeService;
+        protected readonly IPhoneNumberService _phoneNumberService;
 
-        public ContactsController(IContactService contactService, IEmailService emailService, IPhoneTypeService phoneTypeService)
+        public ContactsController(IContactService contactService, IEmailService emailService, IPhoneTypeService phoneTypeService, IPhoneNumberService phoneNumberService)
         {
             _contacService = contactService;
             _emailService = emailService;
             _phoneTypeService = phoneTypeService;
+            _phoneNumberService = phoneNumberService;
         }
 
 
@@ -58,6 +60,7 @@ namespace ContactBook.Controllers
         {
 
             await _emailService.DeleteEmailsByContactId(id);
+            await _phoneNumberService.DeletePhonesByContactId(id);
             await _contacService.DeleteContactById(id);
 
             return Ok();
@@ -187,5 +190,103 @@ namespace ContactBook.Controllers
             return Ok(phoneTypes);
         }
 
+        [HttpPut]
+        [Route("api/phoneTypes/update")]
+        public async Task<IHttpActionResult> UpdatePhoneType(PhoneTypes phoneType)
+        {
+            if (!Utils.ValidatePhoneType(phoneType.PhoneType))
+            {
+                return BadRequest();
+            }
+
+            var result = await _phoneTypeService.UpdatePhoneType(phoneType);
+            if (!result.Succeeded)
+            {
+                return Conflict();
+            }
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("api/phoneTypes/{id:int}")] 
+        public async Task<IHttpActionResult> DeletePhoneType(int id)
+        {
+
+           // await _emailService.DeleteEmailsByContactId(id);
+           // await _contacService.DeleteContactById(id);
+
+            // dzēst tikai, ja neviens phoneNumber nav piesiets
+
+            return Ok();
+        }
+
+        //---------------------- PhoneNumber ------------------------
+
+        [HttpPut]
+        [Route("api/phoneNumbers")]
+        public async Task<IHttpActionResult> AddPhoneNumber(PhoneRequest phoneRequest)
+        {
+
+            if (!Utils.ValidatePhoneNumber(phoneRequest.PhoneNumber))
+            {
+                return BadRequest();
+            }
+
+            var phoneNumber = new PhoneNumbers();
+            phoneNumber.Contact = await _contacService.GetContactById(phoneRequest.Id);
+            phoneNumber.PhoneType = await _phoneTypeService.GetPhoneTypeById(phoneRequest.PhoneTypeId);
+            phoneNumber.PhoneNumber = phoneRequest.PhoneNumber;
+
+            var result = await _phoneNumberService.AddPhoneNumber(phoneNumber);
+            if (!result.Succeeded)
+            {
+                return Conflict();
+            }
+            phoneNumber.Id = result.Entity.Id;
+            return Created(string.Empty, phoneNumber);
+        }
+
+        [HttpGet]
+        [Route("api/get/phonesNC/{id:int}")]
+        public async Task<IHttpActionResult> GetPhonesNoContactById(int id)
+        {
+            var phonesNC = await _phoneNumberService.GetPhonesNoContactById(id);
+            return Ok(phonesNC);
+        }
+
+        [HttpDelete]
+        [Route("api/phoneNumbers/{id:int}")]
+        public async Task<IHttpActionResult> DeletePhoneNumber(int id)
+        {
+            await _phoneNumberService.DeletePhoneNumberById(id);
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("api/phoneNumbers/update")]
+        public async Task<IHttpActionResult> UpdatePhoneNumber(PhoneRequest phoneNumber)
+        {
+            if (!Utils.ValidatePhoneNumber(phoneNumber.PhoneNumber))
+            {
+                return BadRequest();
+            }
+
+            var phoneNumberToUpdate = await _phoneNumberService.GetPhoneById(phoneNumber.Id);
+            phoneNumberToUpdate.PhoneType = await _phoneTypeService.GetPhoneTypeById(phoneNumber.PhoneTypeId);
+            phoneNumberToUpdate.PhoneNumber = phoneNumber.PhoneNumber;
+
+            //var phoneNumberToUpdate = new PhoneNumbers();
+            //phoneNumberToUpdate.Contact
+
+            //phone.PhoneNumber = phoneRequest.PhoneNumber;(
+            //phone.PhoneType = 
+
+            var result = await _phoneNumberService.UpdatePhoneNumber(phoneNumberToUpdate);
+            if (!result.Succeeded)
+            {
+                return Conflict();
+            }
+            return Ok();
+        }
     }
 }

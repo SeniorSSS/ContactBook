@@ -55,6 +55,7 @@
     <Compile Include="DbService.cs" />
     <Compile Include="EmailService.cs" />
     <Compile Include="EntityService.cs" />
+    <Compile Include="PhoneNumberService.cs" />
     <Compile Include="PhoneTypeService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -71,5 +71,21 @@ namespace ContactBook.Core.Services
             return true;
         }
 
+        public static bool ValidatePhoneNumber(string phoneNumber)
+        {
+            if (phoneNumber == null || String.IsNullOrEmpty(phoneNumber)) { return false; }
+
+            //var regex = @"^\+(?:[0-9] ?){6,14}[0-9]$";
+
+            //RegexOptions options = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace;
+
+            var phoneNumberWithoutSpaces = phoneNumber.Replace(" ", string.Empty);
+
+            var regex = @"^\+?[0-9]+$";
+            return Regex.IsMatch(phoneNumberWithoutSpaces, regex);
+
+            return true;
+        }
+
     }
 }

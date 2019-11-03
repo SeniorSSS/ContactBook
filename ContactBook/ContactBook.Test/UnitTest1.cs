@@ -39,5 +39,24 @@ namespace ContactBook.Test
             Assert.IsFalse(Utils.ValidateEmail(emailBad2));
 
         }
+
+        [TestMethod]
+        public void TestValidatePhoneNumber()
+        {
+            var phoneCorrect = "+37129374039";
+            var phoneCorrect2 = "29 37 40 39";
+            var phoneEmpty = "";
+            string phoneNull = null;
+            var phoneBad1 = "asdf45346";
+            var phoneBad2 = "123123v1";
+
+            Assert.IsTrue(Utils.ValidatePhoneNumber(phoneCorrect));
+            Assert.IsTrue(Utils.ValidatePhoneNumber(phoneCorrect2));
+            Assert.IsFalse(Utils.ValidatePhoneNumber(phoneEmpty));
+            Assert.IsFalse(Utils.ValidatePhoneNumber(phoneNull));
+            Assert.IsFalse(Utils.ValidatePhoneNumber(phoneBad1));
+            Assert.IsFalse(Utils.ValidatePhoneNumber(phoneBad2));
+
+        }
     }
 }
