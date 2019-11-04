@@ -20,7 +20,8 @@ namespace ContactBook.Core.Services
 
         Task<ServicesResult> DeleteEmailById(int id);
         Task DeleteEmailsByContactId(int id);
-        Task<ServicesResult> UpdateEmail(EmailRequest emailReq);
+        Task<ServicesResult> UpdateEmail(Emails email);
+        Task<Emails> GetEmail(int id);
     }
 
 }

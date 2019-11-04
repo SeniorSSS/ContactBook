@@ -41,6 +41,7 @@ namespace ContactBook.DependencyResolution {
             For<IEmailService>().Use<EmailService>();
             For<IPhoneTypeService>().Use<PhoneTypeService>();
             For<IPhoneNumberService>().Use<PhoneNumberService>();
+            For<IAddressService>().Use<AddressService>();
         }
 
         #endregion

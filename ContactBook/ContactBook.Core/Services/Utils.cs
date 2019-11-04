@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace ContactBook.Core.Services
 {
@@ -15,14 +16,15 @@ namespace ContactBook.Core.Services
         public static bool ValidateContact(Contacts contact)
         {
             if (contact == null || String.IsNullOrEmpty(contact.Name)) { return false; }
-          
+
             return true;
         }
 
-        public static bool ValidateEmail(string email)
+        public static bool ValidateEmail(Emails emailToValidate)
         {
-            if (string.IsNullOrWhiteSpace(email))
+            if (emailToValidate == null || emailToValidate.Contact == null || string.IsNullOrWhiteSpace(emailToValidate.Email))
                 return false;
+            var email = emailToValidate.Email;
 
             try
             {
@@ -65,27 +67,36 @@ namespace ContactBook.Core.Services
 
         }
 
-        public static bool ValidatePhoneType(string phoneType)
+        public static bool ValidatePhoneType(PhoneTypes phoneType)
         {
-            if (phoneType == null || String.IsNullOrEmpty(phoneType)) { return false; }
+            if (phoneType == null || String.IsNullOrEmpty(phoneType.PhoneType)) { return false; }
             return true;
         }
 
-        public static bool ValidatePhoneNumber(string phoneNumber)
+        public static bool ValidatePhoneNumber(PhoneNumbers phoneNumber)
         {
-            if (phoneNumber == null || String.IsNullOrEmpty(phoneNumber)) { return false; }
+            if (phoneNumber == null || phoneNumber.Contact == null || String.IsNullOrEmpty(phoneNumber.PhoneNumber)) { return false; }
 
             //var regex = @"^\+(?:[0-9] ?){6,14}[0-9]$";
 
             //RegexOptions options = RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace;
 
-            var phoneNumberWithoutSpaces = phoneNumber.Replace(" ", string.Empty);
+            var phoneNumberWithoutSpaces = phoneNumber.PhoneNumber.Replace(" ", string.Empty);
 
             var regex = @"^\+?[0-9]+$";
             return Regex.IsMatch(phoneNumberWithoutSpaces, regex);
 
             return true;
         }
+        public static bool ValidateAddressInput(Addresses address)
+        {
+            if (address == null || address.Contact == null || String.IsNullOrEmpty(address.Address)) { return false; }
+
+
+            return true;
+        }
+
+
 
     }
 }

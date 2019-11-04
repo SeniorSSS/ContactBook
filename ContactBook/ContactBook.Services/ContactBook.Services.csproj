@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddressService.cs" />
     <Compile Include="ContactService.cs" />
     <Compile Include="DbService.cs" />
     <Compile Include="EmailService.cs" />

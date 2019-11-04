@@ -18,13 +18,15 @@ namespace ContactBook.Controllers
         protected readonly IEmailService _emailService;
         protected readonly IPhoneTypeService _phoneTypeService;
         protected readonly IPhoneNumberService _phoneNumberService;
+        protected readonly IAddressService _addressService;
 
-        public ContactsController(IContactService contactService, IEmailService emailService, IPhoneTypeService phoneTypeService, IPhoneNumberService phoneNumberService)
+        public ContactsController(IContactService contactService, IEmailService emailService, IPhoneTypeService phoneTypeService, IPhoneNumberService phoneNumberService, IAddressService addressService)
         {
             _contacService = contactService;
             _emailService = emailService;
             _phoneTypeService = phoneTypeService;
             _phoneNumberService = phoneNumberService;
+            _addressService = addressService;
         }
 
 
@@ -58,7 +60,7 @@ namespace ContactBook.Controllers
         [Route("api/contacts/{id:int}")]
         public async Task<IHttpActionResult> DeleteContact(int id)
         {
-
+            await _addressService.DeleteAddressesByContactId(id);
             await _emailService.DeleteEmailsByContactId(id);
             await _phoneNumberService.DeletePhonesByContactId(id);
             await _contacService.DeleteContactById(id);
@@ -119,7 +121,7 @@ namespace ContactBook.Controllers
             email.Contact = await _contacService.GetContactById(emailWithIdAsContactId.Id);
             email.Email = emailWithIdAsContactId.Email;
 
-            if (!Utils.ValidateEmail(email.Email))
+            if (!Utils.ValidateEmail(email))
             {
                 return BadRequest();
             }
@@ -144,9 +146,11 @@ namespace ContactBook.Controllers
 
         [HttpPut]
         [Route("api/emails/update")]
-        public async Task<IHttpActionResult> UpdateEmail(EmailRequest email)
+        public async Task<IHttpActionResult> UpdateEmail(EmailRequest emailReq)
         {
-            if (!Utils.ValidateEmail(email.Email))
+            var email = await _emailService.GetEmail(emailReq.Id);
+            email.Email = emailReq.Email;
+            if (!Utils.ValidateEmail(email))
             {
                 return BadRequest();
             }
@@ -168,7 +172,7 @@ namespace ContactBook.Controllers
         [Route("api/phoneTypes")]
         public async Task<IHttpActionResult> AddPhoneTupe(PhoneTypes phoneType)
         {
-            if (!Utils.ValidatePhoneType(phoneType.PhoneType))
+            if (!Utils.ValidatePhoneType(phoneType))
             {
                 return BadRequest();
             }
@@ -194,7 +198,7 @@ namespace ContactBook.Controllers
         [Route("api/phoneTypes/update")]
         public async Task<IHttpActionResult> UpdatePhoneType(PhoneTypes phoneType)
         {
-            if (!Utils.ValidatePhoneType(phoneType.PhoneType))
+            if (!Utils.ValidatePhoneType(phoneType))
             {
                 return BadRequest();
             }
@@ -212,8 +216,6 @@ namespace ContactBook.Controllers
         public async Task<IHttpActionResult> DeletePhoneType(int id)
         {
 
-           // await _emailService.DeleteEmailsByContactId(id);
-           // await _contacService.DeleteContactById(id);
 
             // dzēst tikai, ja neviens phoneNumber nav piesiets
 
@@ -226,16 +228,15 @@ namespace ContactBook.Controllers
         [Route("api/phoneNumbers")]
         public async Task<IHttpActionResult> AddPhoneNumber(PhoneRequest phoneRequest)
         {
-
-            if (!Utils.ValidatePhoneNumber(phoneRequest.PhoneNumber))
-            {
-                return BadRequest();
-            }
-
             var phoneNumber = new PhoneNumbers();
             phoneNumber.Contact = await _contacService.GetContactById(phoneRequest.Id);
             phoneNumber.PhoneType = await _phoneTypeService.GetPhoneTypeById(phoneRequest.PhoneTypeId);
             phoneNumber.PhoneNumber = phoneRequest.PhoneNumber;
+
+            if (!Utils.ValidatePhoneNumber(phoneNumber))
+            {
+                return BadRequest();
+            }
 
             var result = await _phoneNumberService.AddPhoneNumber(phoneNumber);
             if (!result.Succeeded)
@@ -266,20 +267,14 @@ namespace ContactBook.Controllers
         [Route("api/phoneNumbers/update")]
         public async Task<IHttpActionResult> UpdatePhoneNumber(PhoneRequest phoneNumber)
         {
-            if (!Utils.ValidatePhoneNumber(phoneNumber.PhoneNumber))
-            {
-                return BadRequest();
-            }
-
             var phoneNumberToUpdate = await _phoneNumberService.GetPhoneById(phoneNumber.Id);
             phoneNumberToUpdate.PhoneType = await _phoneTypeService.GetPhoneTypeById(phoneNumber.PhoneTypeId);
             phoneNumberToUpdate.PhoneNumber = phoneNumber.PhoneNumber;
 
-            //var phoneNumberToUpdate = new PhoneNumbers();
-            //phoneNumberToUpdate.Contact
-
-            //phone.PhoneNumber = phoneRequest.PhoneNumber;(
-            //phone.PhoneType = 
+            if (!Utils.ValidatePhoneNumber(phoneNumberToUpdate))
+            {
+                return BadRequest();
+            }
 
             var result = await _phoneNumberService.UpdatePhoneNumber(phoneNumberToUpdate);
             if (!result.Succeeded)
@@ -288,5 +283,75 @@ namespace ContactBook.Controllers
             }
             return Ok();
         }
+
+        // ================================== Address ==========================================
+        //======================================================================================
+
+        [HttpPut]
+        [Route("api/addresses")]
+        public async Task<IHttpActionResult> AddAddress(AddressRequest addressReq)
+        {
+            var address = new Addresses();
+            address.Contact = await _contacService.GetContactById(addressReq.Id);
+            address.Address = addressReq.Address;
+
+            if (!Utils.ValidateAddressInput(address))
+            {
+                return BadRequest();
+            }
+
+            var validateAddress = await _addressService.GetLocation(address.Address);
+            if (!validateAddress.Succeeded)
+            {
+                return BadRequest();
+            }
+
+            var result = await _addressService.AddAddress(address);
+            if (!result.Succeeded)
+            {
+                return Conflict();
+            }
+            address.Id = result.Entity.Id;
+
+            return Created(string.Empty, address.Address);
+        }
+
+
+        [HttpGet]
+        [Route("api/get/addressesNC/{id:int}")]
+ 
+        public async Task<IHttpActionResult> GetAddressesNoContactById(int id)
+        {
+            var addresses = await _addressService.GetAddressesOnlyByContactId(id);
+            return Ok(addresses);
+        }
+
+        [HttpPut]
+        [Route("api/addresses/update")]
+        public async Task<IHttpActionResult> UpdateAddress(AddressRequest address)
+        {
+            /*            if (!Utils.ValidateEmail(email.Email))
+                        {
+                            return BadRequest();
+                        }*/
+
+
+            var result = await _addressService.UpdateAddress(address);
+            if (!result.Succeeded)
+            {
+                return Conflict();
+            }
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("api/addresses/{id:int}")]
+        public async Task<IHttpActionResult> DeleteAddresses(int id)
+        {
+            await _addressService.DeleteAddressById(id);
+            return Ok();
+        }
+
     }
 }
