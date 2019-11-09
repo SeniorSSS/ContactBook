@@ -34,7 +34,7 @@ I decided to create separate endpoints for each table so data which frontend sen
 
 Basically, each table (except Contact) have such endpoint 
 - **read** - api/get/{table}NC/{id} where id is contact Id and return is list of record Id and record data.
-- **add **- api/{table} with data containing contact Id and data to add
+- **add**- api/{table} with data containing contact Id and data to add
 - **update** - api/{table}/update with data containing record Id and data to update
 - **delete** - api/{table}/{id} where id is record to delete Id
 
