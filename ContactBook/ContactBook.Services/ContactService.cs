@@ -3,6 +3,8 @@ using ContactBook.Core.Services;
 using ContactBook.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Data.Entity;
 
 namespace ContactBook.Services
 {
@@ -12,6 +14,17 @@ namespace ContactBook.Services
         public async Task<IEnumerable<Contacts>> GetContacts()
         {
             return await Task.FromResult(Get());
+        }
+
+        public async Task<IEnumerable<ContactRequest>> GetContactsNames()
+        {
+            var contacts = Query().Where(c => c == c).
+                Select(c => new ContactRequest {
+                    Id = c.Id,
+                    Name = c.Name
+                });
+
+            return await contacts.ToListAsync();
         }
 
         public async Task<ServicesResult> AddContact(Contacts contact)
@@ -55,6 +68,9 @@ namespace ContactBook.Services
 
         public async Task Clear()
         {
+            _ctx.Addresses.RemoveRange(_ctx.Addresses);
+            _ctx.PhoneNumbers.RemoveRange(_ctx.PhoneNumbers);
+            _ctx.PhoneTypes.RemoveRange(_ctx.PhoneTypes);
             _ctx.Emails.RemoveRange(_ctx.Emails);
             _ctx.Contacts.RemoveRange(_ctx.Contacts);
             

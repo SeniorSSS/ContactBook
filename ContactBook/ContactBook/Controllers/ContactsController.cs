@@ -39,6 +39,15 @@ namespace ContactBook.Controllers
             return Ok(contacts);
         }
 
+        [HttpGet]
+        [Route("api/get/contactsNames")]
+        public async Task<IHttpActionResult> GetContactsName()
+        {
+            var contacts = await _contacService.GetContactsNames();
+
+            return Ok(contacts);
+        }
+
         [HttpPut]
         [Route("api/contacts")]
         public async Task<IHttpActionResult> AddContact(Contacts contact)
