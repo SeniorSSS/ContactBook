@@ -63,5 +63,18 @@ namespace ContactBook.Services
 
             return phone == null ? new ServicesResult(true) : Update(phone);
         }
+
+        public async Task<IEnumerable<ContactRequest>> SearchPhones(string search)
+        {
+            search = search.ToLower().Trim();
+            var found = Query().Where(e => e.PhoneNumber.ToLower().Contains(search))
+                                .Select(e => new ContactRequest
+                                {
+                                    Id = e.Contact.Id,
+                                    Name = e.Contact.Name
+                                });
+
+            return await found.ToListAsync();
+        }
     }
 }

@@ -15,5 +15,7 @@ namespace ContactBook.Core.Services
         Task<ServicesResult> DeleteContactById(int id);
         Task<ServicesResult> UpdateContact(Contacts contact);
         Task<IEnumerable<ContactRequest>> GetContactsNames();
+        Task<IEnumerable<ContactRequest>> SearchContacts(string search);
+        Task Clear();
     }
 }

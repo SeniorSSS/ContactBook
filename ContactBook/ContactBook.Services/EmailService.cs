@@ -67,5 +67,18 @@ namespace ContactBook.Services
             return email == null ? new ServicesResult(true) : Update(email);       
         }
 
+        public async Task<IEnumerable<ContactRequest>> SearchEmails(string search)
+        {
+            search = search.ToLower().Trim();
+            var found = Query().Where(e => e.Email.ToLower().Contains(search))
+                                .Select(e => new ContactRequest
+                                {
+                                    Id = e.Contact.Id,
+                                    Name = e.Contact.Name
+                                });
+
+            return await found.ToListAsync();
+        }
+
     }
 }

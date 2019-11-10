@@ -29,6 +29,13 @@ namespace ContactBook.Controllers
             _addressService = addressService;
         }
 
+        [HttpPost]
+        [Route("api/clear")]
+        public async Task<bool> Clear()
+        {
+            await _contacService.Clear();
+            return true;
+        }
 
         [HttpGet]
         [Route("api/get/contacts")]
@@ -94,8 +101,26 @@ namespace ContactBook.Controllers
             return Ok();
         }
 
-// ================================== EMails ===========================================
-//======================================================================================
+        [HttpGet]
+        [Route("api/search/contacts")]
+        public async Task<IHttpActionResult> SearchContacts(string search)
+        {
+            if (!Utils.ValidateSearchInput(search))
+            {
+                return BadRequest();
+            }
+            var contacts = await _contacService.SearchContacts(search);
+            var foundEmails = await _emailService.SearchEmails(search);
+            var foundPhones = await _phoneNumberService.SearchPhones(search);
+
+            var result = contacts.Union(foundEmails).Union(foundPhones);
+            //var res2 = result.OrderBy(a => a.Name).Skip(10).Take(5).ToList();
+
+            return Ok(result);
+        }
+
+        // ================================== EMails ===========================================
+        //======================================================================================
 
         [HttpGet]
         [Route("api/get/emails/{id:int}")]

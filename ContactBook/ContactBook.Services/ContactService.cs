@@ -59,7 +59,7 @@ namespace ContactBook.Services
 
             //var emailsToDelete = Query().Where
 
-           // _ctx.Emails.Where()
+            // _ctx.Emails.Where()
 
             //var emailsToDelete = 
 
@@ -73,8 +73,23 @@ namespace ContactBook.Services
             _ctx.PhoneTypes.RemoveRange(_ctx.PhoneTypes);
             _ctx.Emails.RemoveRange(_ctx.Emails);
             _ctx.Contacts.RemoveRange(_ctx.Contacts);
-            
+
             await _ctx.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<ContactRequest>> SearchContacts(string search)
+        {
+            search = search.ToLower().Trim();
+
+            var found = Query().Where(c => c.Name.ToLower().Contains(search) ||
+                                            c.Company.ToLower().Contains(search))
+                                .Select(c => new ContactRequest
+                                {
+                                    Id = c.Id,
+                                    Name = c.Name
+                                });
+
+            return await found.ToListAsync();
         }
 
     }

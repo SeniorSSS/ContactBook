@@ -96,7 +96,13 @@ namespace ContactBook.Core.Services
             return true;
         }
 
+        public static bool ValidateSearchInput(string search)
+        {
+            search = search.Trim();
+            if (search == null || String.IsNullOrEmpty(search)) { return false; }
 
+            return true;
+        }
 
     }
 }
