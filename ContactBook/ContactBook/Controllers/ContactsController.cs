@@ -38,7 +38,8 @@ namespace ContactBook.Controllers
         }
 
         [HttpGet]
-        [Route("api/get/contacts")]
+        //[Route("api/get/contacts")]
+        [Route("api/contacts")]
         public async Task<IHttpActionResult> GetContacts()
         {
             var contacts = await _contacService.GetContacts();
@@ -47,7 +48,8 @@ namespace ContactBook.Controllers
         }
 
         [HttpGet]
-        [Route("api/get/contactsNames")]
+        //[Route("api/get/contactsNames")]
+        [Route("api/contacts/names")]
         public async Task<IHttpActionResult> GetContactsName()
         {
             var contacts = await _contacService.GetContactsNames();
@@ -55,7 +57,7 @@ namespace ContactBook.Controllers
             return Ok(contacts);
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("api/contacts")]
         public async Task<IHttpActionResult> AddContact(Contacts contact)
         {
@@ -85,7 +87,8 @@ namespace ContactBook.Controllers
         }
 
         [HttpPut]
-        [Route("api/contacts/update")]
+        //[Route("api/contacts/update")]
+        [Route("api/contacts")]
         public async Task<IHttpActionResult> UpdateContact(Contacts contact)
         {
             if (!Utils.ValidateContact(contact))
@@ -102,7 +105,8 @@ namespace ContactBook.Controllers
         }
 
         [HttpGet]
-        [Route("api/search/contacts")]
+        //[Route("api/search/contacts")]
+        [Route("api/contacts/search")]
         public async Task<IHttpActionResult> SearchContacts(string search)
         {
             if (!Utils.ValidateSearchInput(search))
@@ -123,7 +127,7 @@ namespace ContactBook.Controllers
         //======================================================================================
 
         [HttpGet]
-        [Route("api/get/emails/{id:int}")]
+        [Route("api/get/emailsWithContact/{id:int}")]
         public async Task<IHttpActionResult> GetEmailsById(int id)
         {
             var emails = await _emailService.GetEmailsById(id);
@@ -131,7 +135,7 @@ namespace ContactBook.Controllers
         }
 
         [HttpGet]
-        [Route("api/get/emailsNC/{id:int}")]
+        [Route("api/get/emails/{id:int}")]
         //atdod email id un email bez informacijas par kontaktu no parenta
         public async Task<IHttpActionResult> GetEmailsNoContactById(int id)
         {
@@ -140,14 +144,14 @@ namespace ContactBook.Controllers
         }
 
         [HttpGet]
-        [Route("api/get/emails/all")]
+        [Route("api/get/emails/")]
         public async Task<IHttpActionResult> GetAllEmails()
         {
             var emails = await _emailService.GetEmails();
             return Ok(emails);
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("api/emails")]
         public async Task<IHttpActionResult> AddEmails(EmailRequest emailWithIdAsContactId)
         {
@@ -179,7 +183,7 @@ namespace ContactBook.Controllers
         }
 
         [HttpPut]
-        [Route("api/emails/update")]
+        [Route("api/emails")]
         public async Task<IHttpActionResult> UpdateEmail(EmailRequest emailReq)
         {
             var email = await _emailService.GetEmail(emailReq.Id);
@@ -202,7 +206,7 @@ namespace ContactBook.Controllers
 
         //---- PhoneTypes
 
-        [HttpPut]
+        [HttpPost]
         [Route("api/phoneTypes")]
         public async Task<IHttpActionResult> AddPhoneTupe(PhoneTypes phoneType)
         {
@@ -220,7 +224,7 @@ namespace ContactBook.Controllers
         }
 
         [HttpGet]
-        [Route("api/get/phoneTypes")]
+        [Route("api/phoneTypes")]
         public async Task<IHttpActionResult> GetPhoneTypes()
         {
             var phoneTypes = await _phoneTypeService.GetPhoneTypes();
@@ -229,7 +233,7 @@ namespace ContactBook.Controllers
         }
 
         [HttpPut]
-        [Route("api/phoneTypes/update")]
+        [Route("api/phoneTypes")]
         public async Task<IHttpActionResult> UpdatePhoneType(PhoneTypes phoneType)
         {
             if (!Utils.ValidatePhoneType(phoneType))
@@ -258,7 +262,7 @@ namespace ContactBook.Controllers
 
         //---------------------- PhoneNumber ------------------------
 
-        [HttpPut]
+        [HttpPost]
         [Route("api/phoneNumbers")]
         public async Task<IHttpActionResult> AddPhoneNumber(PhoneRequest phoneRequest)
         {
@@ -282,7 +286,7 @@ namespace ContactBook.Controllers
         }
 
         [HttpGet]
-        [Route("api/get/phonesNC/{id:int}")]
+        [Route("api/phoneNumbers/{id:int}")]
         public async Task<IHttpActionResult> GetPhonesNoContactById(int id)
         {
             var phonesNC = await _phoneNumberService.GetPhonesNoContactById(id);
@@ -290,7 +294,7 @@ namespace ContactBook.Controllers
         }
 
         [HttpDelete]
-        [Route("api/phoneNumbers/{id:int}")]
+        [Route("api/phoneNumbersWithContact/{id:int}")]
         public async Task<IHttpActionResult> DeletePhoneNumber(int id)
         {
             await _phoneNumberService.DeletePhoneNumberById(id);
@@ -298,7 +302,7 @@ namespace ContactBook.Controllers
         }
 
         [HttpPut]
-        [Route("api/phoneNumbers/update")]
+        [Route("api/phoneNumbers")]
         public async Task<IHttpActionResult> UpdatePhoneNumber(PhoneRequest phoneNumber)
         {
             var phoneNumberToUpdate = await _phoneNumberService.GetPhoneById(phoneNumber.Id);
@@ -321,7 +325,7 @@ namespace ContactBook.Controllers
         // ================================== Address ==========================================
         //======================================================================================
 
-        [HttpPut]
+        [HttpPost]
         [Route("api/addresses")]
         public async Task<IHttpActionResult> AddAddress(AddressRequest addressReq)
         {
@@ -352,7 +356,7 @@ namespace ContactBook.Controllers
 
 
         [HttpGet]
-        [Route("api/get/addressesNC/{id:int}")]
+        [Route("api/addresses/{id:int}")]
  
         public async Task<IHttpActionResult> GetAddressesNoContactById(int id)
         {
@@ -361,7 +365,7 @@ namespace ContactBook.Controllers
         }
 
         [HttpPut]
-        [Route("api/addresses/update")]
+        [Route("api/addresses")]
         public async Task<IHttpActionResult> UpdateAddress(AddressRequest address)
         {
             /*            if (!Utils.ValidateEmail(email.Email))
