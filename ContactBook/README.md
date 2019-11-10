@@ -32,7 +32,7 @@
 
 I decided to create separate endpoints for each table so data which frontend sends and receives is minimal. Like, if client decide to add email, it adds it at the moment when button "save email" is pressed without waiting for all contact changes saving or collecting all contact data. Same with update and delete for any lookup tables. Main contact data is managed in one heap. And frontend uses contact id to collect all data from lookup tables.
 
-Basically, each table (except Contact) have such endpoint 
+Basically, each table have such endpoint 
 - **read** - (GET) api/{table}/{id} where id is contact Id and return is list of record Id and record data.
 - **add**- (POST) api/{table} with data containing contact Id and data to add
 - **update** - (PUT)api/{table} with data containing record Id and data to update
