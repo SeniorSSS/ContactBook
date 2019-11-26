@@ -27,7 +27,7 @@ export default {
       }
   },
   methods: {
-      addCat: function() {         
+      addCat: function() {        
           return this.cats.push({name: this.newCat})
       }
   }

@@ -39,7 +39,7 @@ namespace ContactBook.Controllers
 
         [HttpGet]
         //[Route("api/get/contacts")]
-        [Route("api/contacts")]
+        [Route("api/contacts/full")]
         public async Task<IHttpActionResult> GetContacts()
         {
             var contacts = await _contacService.GetContacts();
@@ -49,12 +49,22 @@ namespace ContactBook.Controllers
 
         [HttpGet]
         //[Route("api/get/contactsNames")]
-        [Route("api/contacts/names")]
+        [Route("api/contacts")]
         public async Task<IHttpActionResult> GetContactsName()
         {
             var contacts = await _contacService.GetContactsNames();
 
             return Ok(contacts);
+        }
+
+        [HttpGet]
+        //[Route("api/get/contactsNames")]
+        [Route("api/contacts/{id:int}")]
+        public async Task<IHttpActionResult> GetContact(int id)
+        {
+            var contact = await _contacService.GetContactById(id);
+
+            return Ok(contact);
         }
 
         [HttpPost]
